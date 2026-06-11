@@ -17,7 +17,7 @@ export default function RootLayout() {
   const { colorScheme } = useColorScheme();
 
   return (
-    <ThemeProvider value={NAV_THEME.light}>
+    <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
       <Stack/>
     </ThemeProvider>
   );
