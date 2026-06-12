@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import * as Location from 'expo-location';
 
 interface Clima {
   fecha: string;
@@ -21,42 +22,43 @@ interface Dia {
     };
   };
 }
+
 export default function useClima() {
   const [clima, setClima] = useState<Clima | null>(null);
   const [dias, setDias] = useState<Dia[]>([]);
   const [diaSeleccionado, setDiaSeleccionado] = useState(0);
   const [ciudad, setCiudad] = useState('');
-  const climaActual = dias[diaSeleccionado];
 
+  const climaActual = dias[diaSeleccionado];
 
   const hoy = new Date();
   const ayer = new Date(hoy);
   ayer.setDate(hoy.getDate() - 1);
   const mañana = new Date(hoy);
   mañana.setDate(hoy.getDate() + 1);
-  const fechaHoy = hoy.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-  });
-  const fechaAyer = ayer.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-  });
-  const fechaMañana = mañana.toLocaleDateString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-  });
 
-  
+  const fechaHoy = hoy.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+  const fechaAyer = ayer.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+  const fechaMañana = mañana.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+
   useEffect(() => {
     async function traerInfoDeApi() {
+      const permiso = await Location.requestForegroundPermissionsAsync();
+
+      if (permiso.status !== 'granted') {
+        console.log('Permiso de ubicación denegado');
+        return;
+      }
+
+      const posicion = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = posicion.coords;
+
       const respuesta = await fetch(
-        "https://api.weatherapi.com/v1/forecast.json?key=bfb3b780b81a490cb14224558260406&q=Argentina&days=3&aqi=no&alerts=no&lang=es"
+        `https://api.weatherapi.com/v1/forecast.json?key=bfb3b780b81a490cb14224558260406&q=${latitude},${longitude}&days=3&aqi=no&alerts=no&lang=es`
       );
       const datos = await respuesta.json();
+
       setDias(datos.forecast.forecastday);
-
-
       setClima({
         fecha: new Date().toLocaleDateString('es-AR'),
         ciudad: datos.location.name,
@@ -66,14 +68,11 @@ export default function useClima() {
         temperatura: datos.current.temp_c,
         condicion: datos.current.condition.text,
       });
-    console.log(datos)
-
+      setCiudad(datos.location.name);
     }
 
     traerInfoDeApi();
   }, []);
 
-    
-
-  return { clima, fechaAyer, fechaHoy, fechaMañana, ciudad, dias, climaActual, diaSeleccionado, setDiaSeleccionado,};
+  return { clima, fechaAyer, fechaHoy, fechaMañana, ciudad, dias, climaActual, diaSeleccionado, setDiaSeleccionado };
 }
