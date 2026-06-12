@@ -60,7 +60,7 @@ export default function useClima() {
 
       setDias(datos.forecast.forecastday);
       setClima({
-        fecha: new Date().toLocaleDateString('es-AR'),
+        fecha: new Date().toLocaleDateString("es-AR"),
         ciudad: datos.location.name,
         humedad: datos.current.humidity,
         velocidadViento: datos.current.wind_kph,

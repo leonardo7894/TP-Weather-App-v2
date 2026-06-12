@@ -1,17 +1,23 @@
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { Text } from '@/components/ui/text';
-import { Stack } from 'expo-router';
-import { SunIcon } from 'lucide-react-native';
-import * as React from 'react';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import useClima from '../src/hooks/useClima';
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import { Text } from "@/components/ui/text";
+import { Link, Stack } from "expo-router";
+import { SunIcon } from "lucide-react-native";
+import * as React from "react";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import useClima from "../src/hooks/useClima";
 
 export default function Screen() {
-  const { clima, fechaHoy, fechaAyer, fechaMañana, climaActual, setDiaSeleccionado, } = useClima();
+  const {
+    clima,
+    fechaHoy,
+    fechaAyer,
+    fechaMañana,
+    climaActual,
+    setDiaSeleccionado,
+  } = useClima();
 
-  
   return (
     <>
 
