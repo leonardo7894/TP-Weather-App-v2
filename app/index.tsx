@@ -20,32 +20,41 @@ export default function Screen() {
 
   return (
     <>
+      {!clima ? (
+        <Text>Cargando</Text>
+      ) : (
+        <SafeAreaView className="flex-1">
+          <View className="flex-1 items-center p-4">
+            <View className="w-full flex-row justify-between">
+              <Button variant={"link"} onPress={() => setDiaSeleccionado(1)}>
+                <Text style={{ color: "black" }}>{fechaAyer}</Text>
+              </Button>
+              <Button variant={"link"} onPress={() => setDiaSeleccionado(0)}>
+                <Text style={{ color: "black" }}>{fechaHoy}</Text>
+              </Button>
+              <Button variant={"link"} onPress={() => setDiaSeleccionado(2)}>
+                <Text style={{ color: "black" }}>{fechaMañana}</Text>
+              </Button>
+            </View>
 
-{!clima ? <Text>Cargando</Text>: 
-      <SafeAreaView className="flex-1" >
-        <View className="flex-1 items-center p-4" >
-          <View className="w-full flex-row justify-between">
-            <Button variant={"link"} onPress={() => setDiaSeleccionado(1)}>
-              <Text style={{color: "black"}}>{fechaAyer}</Text>
-            </Button>
-            <Button  variant={"link"} onPress={() => setDiaSeleccionado(0)}>
-              <Text style={{color: "black"}}>{fechaHoy}</Text>
-            </Button>
-            <Button variant={"link"} onPress={() => setDiaSeleccionado(2)}>
-              <Text style={{color: "black"}}>{fechaMañana}</Text>
-            </Button >
+            <Text style={{ color: "black" }} className="m-4 text-6xl">
+              {clima.ciudad}
+            </Text>
+            <Icon as={SunIcon} size={150} color="black" />
           </View>
-
-          <Text style={{color: "black"}} className="m-4 text-6xl">{clima.ciudad}</Text>
-          <Icon as={SunIcon} size={100} color= "black"/>
-        </View>
-        <View>
-          <Text style={{color: "black"}}>{climaActual?.day.avgtemp_c}°C</Text>
-          <Text style={{color: "black"}}>{climaActual?.day.avghumidity}%</Text>
-          <Text style={{color: "black"}}>{climaActual?.day.maxwind_kph} km/h</Text>
-        </View>
-      </SafeAreaView>}
-      
+          <View style={{ paddingStart: 30, paddingVertical: 200 }}>
+            <Text style={{ color: "black", fontWeight: "bold" }}>
+              {climaActual?.day.avgtemp_c}°C
+            </Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>
+              {climaActual?.day.avghumidity}%
+            </Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>
+              {climaActual?.day.maxwind_kph} km/h
+            </Text>
+          </View>
+        </SafeAreaView>
+      )}
     </>
   );
 }

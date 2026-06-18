@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react-native";
 import useClima from "@/src/hooks/useClima";
 
+// 1. Dejamos los mocks tal cual los tenías
 jest.mock("expo-location", () => ({
   requestForegroundPermissionsAsync: jest.fn(() =>
     Promise.resolve({ status: "granted" }),
@@ -13,6 +14,8 @@ jest.mock("expo-location", () => ({
 }));
 
 beforeEach(() => {
+  jest.clearAllMocks(); 
+
   global.fetch = jest.fn(() =>
     Promise.resolve({
       json: () =>
@@ -34,6 +37,7 @@ beforeEach(() => {
 test("muestra la ciudad correctamente", async () => {
   const { result } = await renderHook(() => useClima());
 
+  // waitFor se encarga de re-intentar hasta que el estado asíncrono impacte
   await waitFor(() => {
     expect(result.current.clima?.ciudad).toBe("Luis J. Garcia");
   });
