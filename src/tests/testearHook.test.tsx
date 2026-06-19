@@ -1,7 +1,6 @@
-import { renderHook, waitFor } from "@testing-library/react-native";
+import { render, renderHook, waitFor } from "@testing-library/react-native";
 import useClima from "@/src/hooks/useClima";
 
-// 1. Dejamos los mocks tal cual los tenías
 jest.mock("expo-location", () => ({
   requestForegroundPermissionsAsync: jest.fn(() =>
     Promise.resolve({ status: "granted" }),
@@ -14,7 +13,7 @@ jest.mock("expo-location", () => ({
 }));
 
 beforeEach(() => {
-  jest.clearAllMocks(); 
+  jest.clearAllMocks();
 
   global.fetch = jest.fn(() =>
     Promise.resolve({
@@ -27,8 +26,22 @@ beforeEach(() => {
             wind_kph: 6.1,
             pressure_mb: 1027.0,
             condition: { text: "Despejado" },
+            icon: "sunIcon",
           },
-          forecast: { forecastday: [] },
+          forecast: {
+            forecastday: [
+              {
+                date: "19-06-2026",
+                day: {
+                  maxtemp_c: 14.5,
+                  mintemp_c: 7.1,
+                  condition: {
+                    text: "Soleado",
+                  },
+                },
+              },
+            ],
+          },
         }),
     }),
   ) as jest.Mock;
@@ -37,23 +50,44 @@ beforeEach(() => {
 test("muestra la ciudad correctamente", async () => {
   const { result } = await renderHook(() => useClima());
 
-  // waitFor se encarga de re-intentar hasta que el estado asíncrono impacte
   await waitFor(() => {
     expect(result.current.clima?.ciudad).toBe("Luis J. Garcia");
   });
 });
 
-test("muestra la temperatura correctamente", async () => {
+test("muestra el dia correctamente", async () => {
   const { result } = await renderHook(() => useClima());
 
   await waitFor(() => {
+    expect(result.current.clima?.fecha).toBe("19/6/2026");
+  });
+});
+
+// test('renderiza la pantalla principal del clima', () => {
+// const { getByTestId } = render(<Screen />);
+// expect(getByTestId('screen-weather')).toBeTruthy();
+// });
+
+test("muestra icono correctamente", async () => {
+  const { result } = await renderHook(() => useClima());
+
+  await waitFor(() => {
+    expect(result.current.clima?.icon).toBe("sunIcon");
+  });
+});
+
+test("muestra la temperaturas correctamente", async () => {
+  const { result } = await renderHook(() => useClima());
+
+  await waitFor(() => {
+    expect(result.current.dias[0].day.mintemp_c).toBe(7.1);
+    expect(result.current.dias[0].day.maxtemp_c).toBe(14.5);
     expect(result.current.clima?.temperatura).toBe(9.2);
   });
 });
 
 test("muestra la humedad correctamente", async () => {
   const { result } = await renderHook(() => useClima());
-
   await waitFor(() => {
     expect(result.current.clima?.humedad).toBe(93);
   });

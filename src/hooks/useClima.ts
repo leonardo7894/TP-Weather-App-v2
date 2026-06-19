@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import * as Location from 'expo-location';
+import { useEffect, useState } from "react";
+import * as Location from "expo-location";
 
 interface Clima {
   fecha: string;
@@ -9,6 +9,7 @@ interface Clima {
   presionATM: number;
   temperatura: number;
   condicion: string;
+  icon: string;
 }
 
 interface Dia {
@@ -17,6 +18,8 @@ interface Dia {
     avgtemp_c: number;
     avghumidity: number;
     maxwind_kph: number;
+    maxtemp_c: number;
+    mintemp_c: number;
     condicion: {
       text: string;
     };
@@ -27,7 +30,7 @@ export default function useClima() {
   const [clima, setClima] = useState<Clima | null>(null);
   const [dias, setDias] = useState<Dia[]>([]);
   const [diaSeleccionado, setDiaSeleccionado] = useState(0);
-  const [ciudad, setCiudad] = useState('');
+  const [ciudad, setCiudad] = useState("");
 
   const climaActual = dias[diaSeleccionado];
 
@@ -37,16 +40,25 @@ export default function useClima() {
   const mañana = new Date(hoy);
   mañana.setDate(hoy.getDate() + 1);
 
-  const fechaHoy = hoy.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
-  const fechaAyer = ayer.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
-  const fechaMañana = mañana.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+  const fechaHoy = hoy.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+  const fechaAyer = ayer.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+  const fechaMañana = mañana.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+  });
 
   useEffect(() => {
     async function traerInfoDeApi() {
       const permiso = await Location.requestForegroundPermissionsAsync();
 
-      if (permiso.status !== 'granted') {
-        console.log('Permiso de ubicación denegado');
+      if (permiso.status !== "granted") {
+        console.log("Permiso de ubicación denegado");
         return;
       }
 
@@ -54,7 +66,7 @@ export default function useClima() {
       const { latitude, longitude } = posicion.coords;
 
       const respuesta = await fetch(
-        `https://api.weatherapi.com/v1/forecast.json?key=bfb3b780b81a490cb14224558260406&q=${latitude},${longitude}&days=3&aqi=no&alerts=no&lang=es`
+        `https://api.weatherapi.com/v1/forecast.json?key=bfb3b780b81a490cb14224558260406&q=${latitude},${longitude}&days=3&aqi=no&alerts=no&lang=es`,
       );
       const datos = await respuesta.json();
 
@@ -67,6 +79,7 @@ export default function useClima() {
         presionATM: datos.current.pressure_mb,
         temperatura: datos.current.temp_c,
         condicion: datos.current.condition.text,
+        icon: "sunIcon",
       });
       setCiudad(datos.location.name);
     }
@@ -74,5 +87,15 @@ export default function useClima() {
     traerInfoDeApi();
   }, []);
 
-  return { clima, fechaAyer, fechaHoy, fechaMañana, ciudad, dias, climaActual, diaSeleccionado, setDiaSeleccionado };
+  return {
+    clima,
+    fechaAyer,
+    fechaHoy,
+    fechaMañana,
+    ciudad,
+    dias,
+    climaActual,
+    diaSeleccionado,
+    setDiaSeleccionado,
+  };
 }
