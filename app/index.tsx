@@ -9,7 +9,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react-native";
-import { View } from "react-native";
+
+import { View, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useClima from "../src/hooks/useClima";
 
@@ -25,35 +26,35 @@ export default function Screen() {
 
   if (!clima) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-[#E8EDF3]">
-        <Text style={{ color: "black", fontWeight: "bold" }}>
+      <SafeAreaView className="flex-1 items-center justify-center bg-[#E8EDF3]">
+        <Text className="font-bold text-black">
           Cargando...
         </Text>
       </SafeAreaView>
     );
   }
+return (
+  <ImageBackground
+    source={require("../assets/images/fondocielo.png")}
+    resizeMode="cover"
+    className="flex-1"
+  >
+    <SafeAreaView className="flex-1">
 
-  return (
-    <SafeAreaView className="flex-1 bg-[#E8EDF3]">
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 20,
-        }}
-      >
+      {/* =======================================================
+                      CONTENEDOR PRINCIPAL
+      ======================================================= */}
+
+      <View className="flex-1 items-center justify-center p-5">
+
+        {/* =======================================================
+                            TARJETA
+        ======================================================= */}
+
         <View
+        className="w-[88%] h-[80%] max-w-[420px] rounded-[30px]  px-6 py-6"
           style={{
-            width: "100%",
-            maxWidth: 420,
-            height: "100%",
-            backgroundColor: "white",
-            borderRadius: 30,
-            paddingHorizontal: 25,
-            paddingVertical: 30,
-            justifyContent: "space-between",
-
+            backgroundColor: "rgba(255,255,255,0.95)",
             shadowColor: "#000",
             shadowOpacity: 0.15,
             shadowRadius: 20,
@@ -64,179 +65,231 @@ export default function Screen() {
             elevation: 8,
           }}
         >
-          {/* ================= HEADER ================= */}
 
-          <View className="w-full flex-row justify-between items-center">
-            <Button variant="link" onPress={() => setDiaSeleccionado(1)}>
+          {/* =======================================================
+                              HEADER
+          ======================================================= */}
+
+          <View className="flex-row items-center justify-between">
+
+            {/* Día anterior */}
+
+            <Button
+              variant="link"
+              onPress={() => setDiaSeleccionado(1)}
+            >
               <View className="flex-row items-center">
-                <Icon as={ChevronLeft} size={18} color="black" />
-                <Text style={{ color: "black", marginLeft: 4 }}>
+
+                <Icon
+                  as={ChevronLeft}
+                  size={18}
+                  color="black"
+                />
+
+                <Text className="ml-1 text-black">
                   {fechaAyer}
                 </Text>
+
               </View>
             </Button>
 
-            <Button variant="link" onPress={() => setDiaSeleccionado(0)}>
-              <Text
-                style={{
-                  color: "black",
-                  fontWeight: "bold",
-                  fontSize: 18,
-                }}
-              >
+            {/* Día actual */}
+
+            <Button
+              variant="link"
+              onPress={() => setDiaSeleccionado(0)}
+            >
+              <Text className="text-[18px] font-bold text-black">
                 {fechaHoy}
               </Text>
             </Button>
 
-            <Button variant="link" onPress={() => setDiaSeleccionado(2)}>
+            {/* Día siguiente */}
+
+            <Button
+              variant="link"
+
+              onPress={() => setDiaSeleccionado(2)}
+            >
               <View className="flex-row items-center">
-                <Text style={{ color: "black", marginRight: 4 }}>
+
+                <Text className="mr-1 text-black">
                   {fechaMañana}
                 </Text>
 
-                <Icon as={ChevronRight} size={18} color="black" />
+                <Icon
+                  as={ChevronRight}
+                  size={18}
+                  color="black"
+                />
+
               </View>
             </Button>
+
           </View>
 
-          {/* ================= CENTRO ================= */}
+          {/* =======================================================
+                        CIUDAD
+======================================================= */}
 
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              paddingVertical: 15,
-            }}
-          >
-            <Text
-              style={{
-                color: "black",
-                fontSize: 28,
-                fontWeight: "700",
-                letterSpacing: 3,
-                width: "100%",
-                textAlign: "center",
-                marginBottom: 10,
-              }}
-            >
-              {clima.ciudad.toUpperCase()}
-            </Text>
+<View className="items-center mt-8 w-full">
 
-            <Icon as={SunIcon} size={205} color="black" />
+  <Text
+    numberOfLines={1}
+    adjustsFontSizeToFit
+    minimumFontScale={0.85}
+    className="w-full text-center font-bold text-black"
+    style={{
+      fontSize: 34,
+      letterSpacing: 1.5,
+    }}
+  >
+    {clima.ciudad.toUpperCase()}
+  </Text>
 
-            <View
-              style={{
-                marginTop: 15,
-                width: 140,
-                alignSelf: "center",
-              }}
-            >
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: 18 }}
-              >
-                <Icon as={Droplet} size={30} color="black" />
+</View>
 
-                <Text
-                  style={{
-                    color: "black",
-                    marginLeft: 10,
-                    fontWeight: "bold",
-                  }}
-                >
+          {/* =======================================================
+                          ICONO DEL CLIMA
+          ======================================================= */}
+
+          <View className="items-center mt-8">
+
+            <Icon
+              as={SunIcon}
+              size={185}
+              color="black"
+            />
+
+          </View>
+
+          {/* =======================================================
+                          DATOS DEL CLIMA
+          ======================================================= */}
+
+          <View className="items-center mt-8">
+
+            <View className="w-[180px]">
+
+              {/* Humedad */}
+
+              <View className="flex-row items-center mb-5">
+
+                <Icon
+                  as={Droplet}
+                  size={28}
+                  color="black"
+                />
+
+                <Text className="ml-4 text-lg font-bold text-black">
                   {climaActual?.day.avghumidity}%
                 </Text>
+
               </View>
 
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: 18 }}
-              >
-                <Icon as={Thermometer} size={18} color="black" />
+              {/* Presión */}
 
-                <Text
-                  style={{
-                    color: "black",
-                    marginLeft: 10,
-                    fontWeight: "bold",
-                  }}
-                >
+              <View className="flex-row items-center mb-5">
+
+                <Icon
+                  as={Thermometer}
+                  size={24}
+                  color="black"
+                />
+
+                <Text className="ml-4 text-lg font-bold text-black">
                   {clima.presionATM} hPa
                 </Text>
+
               </View>
 
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: 18 }}
-              >
-                <Icon as={Wind} size={18} color="black" />
+              {/* Viento */}
 
-                <Text
-                  style={{
-                    color: "black",
-                    marginLeft: 10,
-                    fontWeight: "bold",
-                  }}
-                >
+              <View className="flex-row items-center">
+
+                <Icon
+                  as={Wind}
+                  size={24}
+                  color="black"
+                />
+
+                <Text className="ml-4 text-lg font-bold text-black">
                   {climaActual?.day.maxwind_kph} km/h
                 </Text>
+
               </View>
-            </View>
-          </View>
 
-          {/* ================= TEMPERATURAS ================= */}
-
-          <View
-            className="w-full flex-row justify-between items-end"
-            style={{
-              marginTop: 50,
-              paddingBottom: 30,
-            }}
-          >
-            <Text
-              style={{
-                color: "black",
-                fontSize: 34,
-              }}
-            >
-              {climaActual?.day.maxtemp_c}°
-            </Text>
-
-            <View className="items-center">
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: 58,
-                  fontWeight: "bold",
-                }}
-              >
-                {climaActual?.day.avgtemp_c}°
-              </Text>
-
-              <Text
-                style={{
-                  color: "#888",
-                  fontSize: 11,
-                  letterSpacing: 1,
-                  marginTop: -5,
-                }}
-              >
-                NOW
-              </Text>
             </View>
 
-            <Text
-              style={{
-                color: "black",
-                fontSize: 44,
-              }}
-            >
-              {climaActual?.day.mintemp_c}°
-            </Text>
           </View>
+
+                    {/* =======================================================
+                          TEMPERATURAS
+          ======================================================= */}
+
+          <View className="flex-1 justify-end pb-2">
+
+            <View className="flex-row items-end justify-between">
+
+              {/* Temperatura máxima */}
+
+              <View className="items-center">
+
+                <Text className="text-[30px] text-black">
+                  {climaActual?.day.maxtemp_c}°
+                </Text>
+
+                <Text className="mt-1 text-xs text-gray-400">
+                  MAX
+                </Text>
+
+              </View>
+
+              {/* Temperatura actual */}
+
+              <View className="items-center">
+
+                <Text className="text-[70px] font-bold text-black leading-none">
+                  {climaActual?.day.avgtemp_c}°
+                </Text>
+
+                <Text
+                  className="text-xs text-gray-500"
+                  style={{
+                    letterSpacing: 3,
+                    marginTop: -6,
+                  }}
+                >
+                  NOW
+                </Text>
+
+              </View>
+
+              {/* Temperatura mínima */}
+
+              <View className="items-center">
+
+                <Text className="text-[30px] text-black">
+                  {climaActual?.day.mintemp_c}°
+                </Text>
+
+                <Text className="mt-1 text-xs text-gray-400">
+                  MIN
+                </Text>
+
+              </View>
+
+            </View>
+
+          </View>
+
         </View>
+
       </View>
-    </SafeAreaView>
-  );
+
+    
+        </SafeAreaView>
+
+  </ImageBackground>
+);
 }
