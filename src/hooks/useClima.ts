@@ -20,7 +20,7 @@ interface Dia {
     maxwind_kph: number;
     maxtemp_c: number;
     mintemp_c: number;
-    condicion: {
+    condition: {
       text: string;
     };
   };
@@ -71,8 +71,11 @@ export default function useClima() {
       const datos = await respuesta.json();
 
       setDias(datos.forecast.forecastday);
+
+      const [dia, mes, anio] = datos.forecast.forecastday[0].date.split("-");
+      const fechaFormateada = `${parseInt(dia)}/${parseInt(mes)}/${anio}`;
       setClima({
-        fecha: new Date().toLocaleDateString("es-AR"),
+        fecha: fechaFormateada,
         ciudad: datos.location.name,
         humedad: datos.current.humidity,
         velocidadViento: datos.current.wind_kph,
