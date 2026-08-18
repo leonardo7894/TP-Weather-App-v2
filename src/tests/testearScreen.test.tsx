@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react-native";
+import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react-native";
 import Screen from "../../app/index";
 
 jest.mock("expo-location", () => ({

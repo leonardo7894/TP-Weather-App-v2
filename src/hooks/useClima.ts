@@ -65,8 +65,10 @@ export default function useClima() {
       const posicion = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = posicion.coords;
 
+      const apiKey = process.env.EXPO_PUBLIC_WEATHER_API_KEY!;
+
       const respuesta = await fetch(
-        `https://api.weatherapi.com/v1/forecast.json?key=bfb3b780b81a490cb14224558260406&q=${latitude},${longitude}&days=3&aqi=no&alerts=no&lang=es`,
+      `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${latitude},${longitude}&days=3&aqi=no&alerts=no&lang=es`,
       );
       const datos = await respuesta.json();
 
